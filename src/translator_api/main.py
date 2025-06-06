@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from ..translator_core.model import translate
+from src.translator_core.model import translate
 
 app = FastAPI(title="Translator-API")
 

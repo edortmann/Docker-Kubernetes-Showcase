@@ -1,0 +1,20 @@
+# ───────── Web API ──────────────
+fastapi==0.111.0            # main.py
+#uvicorn[standard]==0.30.0  # ASGI server used in the Docker CMD
+pydantic==2.7.2             # request body model
+
+# ───────── UI client ────────────
+streamlit==1.35.0           # Stream-lit front-end
+requests>=2.31.0            # call FastAPI from the UI
+
+# ───────── core & model ─────────
+torch>=2.2,<3               # model.py uses torch.cuda etc.
+transformers==4.43.1        # BitsAndBytesConfig, LlamaTokenizer …
+bitsandbytes==0.43.0        # 4-bit quantisation backend
+accelerate==0.32.0          # HF utility needed by bitsandbytes
+peft==0.15.2                # PeftModel for LoRA adapter
+sentencepiece==0.2.0        # tokenizer dependency for Llama
+huggingface_hub>=0.25.0     # pulled transitively but pin for reproducibility
+
+# ───────── Misc ─────────────────
+packaging>=23.2             # transformers uses it for version checks

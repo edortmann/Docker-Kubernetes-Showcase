@@ -11,7 +11,7 @@ _DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 @lru_cache()
 def _load() -> Tuple[LlamaTokenizer, PeftModel]:
     base = os.getenv("BASE_MODEL", "openlm-research/open_llama_3b_v2")
-    adapter = os.getenv("ADAPTER_DIR", "modelD/checkpoint-300")
+    adapter = os.getenv("ADAPTER_DIR", "weights/checkpoint-300")
 
     qcfg = BitsAndBytesConfig(load_in_4bit=True,
                               bnb_4bit_use_double_quant=True,

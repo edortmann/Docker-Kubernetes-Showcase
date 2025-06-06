@@ -1,0 +1,26 @@
+services:
+  translator-api:
+    build:
+      context: ../..           # project root
+      dockerfile: docker/api/Dockerfile
+      args: { DEVICE: gpu }    # set to cpu or gpu
+    ports: ["8000:8000"]
+    environment:
+      BASE_MODEL: openlm-research/open_llama_3b_v2
+      ADAPTER_DIR: src/translator_core/weights/checkpoint-300
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia   # only honoured on Linux/WSL2
+              count: all
+              capabilities: [gpu]
+
+  translator-ui:
+    build:
+      context: ../..
+      dockerfile: docker/ui/Dockerfile
+    ports: ["8501:8501"]
+    environment:
+      API_URL: http://translator-api:8000/translate
+    depends_on: [translator-api]
