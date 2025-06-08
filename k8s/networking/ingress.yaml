@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: translator-ing
+  namespace: translator
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$1   # strip "/api"
+spec:
+  ingressClassName: nginx   # enable the minikube ingress addon
+  rules:
+    - host: translator.local
+      http:
+        paths:
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: translator-api
+                port: { number: 8000 }
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: translator-ui
+                port: { number: 80 }

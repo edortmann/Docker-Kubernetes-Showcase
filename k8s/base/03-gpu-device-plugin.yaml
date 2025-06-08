@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: gpu-device-plugin
+  namespace: kube-system
+  labels:
+    app: gpu-device-plugin
+spec:
+  selector:
+    matchLabels: { app: gpu-device-plugin }
+  template:
+    metadata:
+      labels: { app: gpu-device-plugin }
+    spec:
+      tolerations:
+        - key: nvidia.com/gpu
+          operator: Exists
+          effect: NoSchedule
+      containers:
+        - name: gpu-device-plugin-ctr
+          image: nvcr.io/nvidia/k8s-device-plugin:v0.14.5
+          args: [ "--fail-on-init-error=false" ]
+          resources:
+            limits:
+              nvidia.com/gpu: 0

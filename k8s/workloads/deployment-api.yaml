@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: translator-api
+  namespace: translator
+spec:
+  replicas: 1
+  selector:
+    matchLabels: { app: translator-api }
+  template:
+    metadata:
+      labels: { app: translator-api }
+    spec:
+      nodeSelector:
+        kubernetes.io/arch: amd64   # WSL2 nodes
+      containers:
+        - name: api
+          image: translator-api:0.1   # loaded into Minikube’s daemon
+          ports: [{ containerPort: 8000 }]
+          envFrom:
+            - configMapRef: { name: translator-env }
+            - secretRef: { name: hf-token }
+          resources:
+            limits:
+              nvidia.com/gpu: 1

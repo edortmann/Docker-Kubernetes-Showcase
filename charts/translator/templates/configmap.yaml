@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "translator.name" . }}-env
+  labels:
+    {{- include "translator.labels" . | nindent 4 }}
+data:
+  BASE_MODEL:  {{ .Values.env.BASE_MODEL | quote }}
+  ADAPTER_DIR: {{ .Values.env.ADAPTER_DIR | quote }}
+  API_URL:     "http://translator-api:8000/translate"

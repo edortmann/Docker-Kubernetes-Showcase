@@ -1,0 +1,24 @@
+replicaCount: 1
+
+image:
+  api: translator-api:0.1
+  ui:  translator-ui:0.1
+
+gpu:
+  enabled: true
+  count: 1
+
+ingress:
+  enabled: true
+  host: translator.local
+
+schedule: "0 6 * * *"
+
+env:
+  BASE_MODEL: "openlm-research/open_llama_3b_v2"
+  ADAPTER_DIR: "src/translator_core/weights/checkpoint-300"
+  API_URL: "http://translator-api:8000/translate"
+
+secret:
+  create: false
+  hf_token: "hf_abcdef"

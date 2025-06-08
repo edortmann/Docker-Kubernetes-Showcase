@@ -1,0 +1,29 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "translator.name" . }}-selftest
+  labels: {{ include "translator.labels" . | nindent 4 }}
+spec:
+  schedule: {{ .Values.schedule | quote }}
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app.kubernetes.io/component: selftest
+            {{- include "translator.labels" . | nindent 12 }}
+        spec:
+          restartPolicy: OnFailure
+          containers:
+            - name: curl
+              image: curlimages/curl:8.8.0
+              command:
+                - /bin/sh
+                - -c
+              args:
+                - >
+                  curl -s -XPOST \
+                  --data '{"text":"Guten Morgen"}' \
+                  http://{{ include "translator.name" . }}-api:8000/translate

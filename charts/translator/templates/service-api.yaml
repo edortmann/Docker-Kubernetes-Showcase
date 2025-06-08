@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "translator.name" . }}-api
+  labels:
+    {{- include "translator.labels" . | nindent 4 }}
+spec:
+  selector:
+    app.kubernetes.io/component: api
+    {{- include "translator.labels" . | nindent 4 }}
+  ports:
+    - port: 8000
+      targetPort: 8000

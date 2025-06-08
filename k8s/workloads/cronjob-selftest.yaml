@@ -1,0 +1,22 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: translator-daily-check
+  namespace: translator
+spec:
+  schedule: "0 6 * * *"   # 06:00 Europe/Berlin
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+            - name: check
+              image: curlimages/curl:8.8.0
+              args:
+                - "curl"
+                - "-s"
+                - "-XPOST"
+                - "--data"
+                - '{"text":"Guten Morgen"}'
+                - "http://translator-api:8000/translate"

@@ -1,0 +1,33 @@
+{{- if .Values.gpu.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "translator.name" . }}-api
+  labels:
+    app.kubernetes.io/component: api
+    {{- include "translator.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: api
+      {{- include "translator.labels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: api
+        {{- include "translator.labels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: api
+          image: {{ .Values.image.api }}
+          ports: [{ containerPort: 8000 }]
+          env:
+            - name: BASE_MODEL
+              value: {{ .Values.env.BASE_MODEL | quote }}
+            - name: ADAPTER_DIR
+              value: {{ .Values.env.ADAPTER_DIR | quote }}
+          resources:
+            limits:
+              nvidia.com/gpu: {{ .Values.gpu.count }}
+{{- end -}}
